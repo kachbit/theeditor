@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Integratable monaco editor for frontend</title>
+  <!-- Monaco Editor CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
+  <!-- Monaco Editor Ex -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor-ex@latest/dist/monaco-editor-ex.iife.js"></script>
+</head>
+<body>
+  <div id="editor" style="height: 600px; width: 800px; border: 1px solid grey;"></div>
+
+  <script>
+    require.config({
+      paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs" },
+    });
+
+    require(["vs/editor/editor.main"], function() {
+      MonacoEditorEx.useMonacoEx(monaco);
+      var editor = monaco.editor.create(document.getElementById("editor"), {
+        value: [
+          '<!DOCTYPE html>',
+          '<html>',
+          '<head>',
+          '  <title>Hello, IntelliSense in Monaco Editor!</title>',
+          '</head>',
+          '<body>',
+          '  <style>',
+          '    /* Emmet should not suggest HTML elements here */',
+          '    .example {',
+          '      background: slateGrey;',
+          '      padding: 20px;',
+          '    }',
+          '  </style>',
+          '  <script>',
+          '    // Emmet should not suggest HTML elements here',
+          '    document.addEventListener("DOMContentLoaded", function() {',
+          '      var element = document.querySelector(".example");',
+          '      element.style.background = "slateGrey";',
+          '      element.style.padding = "20px";',
+          '    });',
+          '  </' + 'script>',
+          '  <h1>Hello, IntelliSense!</h1>',
+          '</body>',
+          '</html>'
+        ].join('\n'),
+        language: 'html',
+        theme: 'vs-dark'
+      });
+    });
+  </script>
+</body>
+</html>
