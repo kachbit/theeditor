@@ -2,52 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Integratable monaco editor for frontend</title>
+  <title>Monaco Editor with Emmet and IntelliSense</title>
   <!-- Monaco Editor CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+  <!-- Emmet for Monaco Editor -->
+  <script src="https://unpkg.com/emmet-monaco-es/dist/emmet-monaco.min.js"></script>
   <!-- Monaco Editor Ex -->
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor-ex@latest/dist/monaco-editor-ex.iife.js"></script>
 </head>
 <body>
-  <div id="editor" style="height: 600px; width: 800px; border: 1px solid grey;"></div>
+  <div id="editor" style="height: 600px; width: 800px;"></div>
 
   <script>
-    require.config({
-      paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs" },
-    });
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
 
-    require(["vs/editor/editor.main"], function() {
+    require(['vs/editor/editor.main'], function() {
       MonacoEditorEx.useMonacoEx(monaco);
-      var editor = monaco.editor.create(document.getElementById("editor"), {
+      var editor = monaco.editor.create(document.getElementById('editor'), {
         value: [
           '<!DOCTYPE html>',
           '<html>',
           '<head>',
-          '  <title>Hello, IntelliSense in Monaco Editor!</title>',
+          '  <title>Hello, Emmet in Monaco Editor!</title>',
           '</head>',
           '<body>',
           '  <style>',
-          '    /* Emmet should not suggest HTML elements here */',
-          '    .example {',
-          '      background: slateGrey;',
-          '      padding: 20px;',
-          '    }',
+          '    /* Emmet should work within style tags */',
           '  </style>',
           '  <script>',
-          '    // Emmet should not suggest HTML elements here',
-          '    document.addEventListener("DOMContentLoaded", function() {',
-          '      var element = document.querySelector(".example");',
-          '      element.style.background = "slateGrey";',
-          '      element.style.padding = "20px";',
-          '    });',
-          '  </' + 'script>',
-          '  <h1>Hello, IntelliSense!</h1>',
+          '    // Emmet should work within script tags',
+          `  <${""}/script>`,
+          '  <h1>Hello, Emmet and IntelliSense!</h1>',
           '</body>',
           '</html>'
         ].join('\n'),
         language: 'html',
         theme: 'vs-dark'
       });
+
+      // Enable Emmet for HTML in Monaco Editor
+      emmetMonaco.emmetHTML(monaco);
+
+      // Register IntelliSense features for JavaScript and CSS within script and style tags
+      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        target: monaco.languages.typescript.ScriptTarget.ES2016,
+        allowNonTsExtensions: true
+      });
+      monaco.languages.typescript.javascriptDefaults.addExtraLib([
+        'declare const document: Document;',
+        'interface Document {',
+        '  querySelector(selectors: string): HTMLElement | null;',
+        '}',
+        'interface HTMLElement {',
+        '  style: CSSStyleDeclaration;',
+        '}',
+        'interface CSSStyleDeclaration {',
+        '  background: string;',
+        '  padding: string;',
+        '  // Add other CSS properties here as needed',
+        '}',
+      ].join('\n'), 'domLib.d.ts');
+
+      // Exclude Emmet suggestions within specific tags
+      editor.onDidCreateEditor(function() {
+        editor.getModel().updateOptions({ 
+          wordBasedSuggestions: false,
+          suggest: {
+            filterGraceful: false,
+            snippetsPreventQuickSuggestions: false
+          }
+        });
+      });
+
+      // Update preview on content change
+      editor.onDidChangeModelContent(() => {
+        updatePreview();
+      });
+
+      function updatePreview() {
+        // Code to update preview if needed
+        console.log('Preview updated:', editor.getValue());
+      }
     });
   </script>
 </body>
