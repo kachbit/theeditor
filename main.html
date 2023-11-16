@@ -1,43 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Monaco Editor with Emmet and IntelliSense</title>
+  <title>Monaco</title>
   <!-- Monaco Editor CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
-  <!-- Emmet for Monaco Editor -->
-  <script src="https://unpkg.com/emmet-monaco-es/dist/emmet-monaco.min.js"></script>
+   <!-- Emmet for Monaco Editor -->
+  <script src="./editor.js"></script>
+ 
   <!-- Monaco Editor Ex -->
-  <script src="https://cdn.jsdelivr.net/npm/monaco-editor-ex@latest/dist/monaco-editor-ex.iife.js"></script>
+ 
+  <!-- Add a script tag to import the theme -->
+ 
 </head>
+
 <body>
-  <div id="editor" style="height: 600px; width: 800px;"></div>
+  <div id="editor"></div>
 
   <script>
-    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
+    //import './theme.js';
 
-    require(['vs/editor/editor.main'], function() {
+      require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
+
+
+    require(['vs/editor/editor.main'], function () {
+
+      initTheme(monaco);
+      
       MonacoEditorEx.useMonacoEx(monaco);
       var editor = monaco.editor.create(document.getElementById('editor'), {
-        value: [
-          '<!DOCTYPE html>',
-          '<html>',
-          '<head>',
-          '  <title>Hello, Emmet in Monaco Editor!</title>',
-          '</head>',
-          '<body>',
-          '  <style>',
-          '    /* Emmet should work within style tags */',
-          '  </style>',
-          '  <script>',
-          '    // Emmet should work within script tags',
-          `  <${""}/script>`,
-          '  <h1>Hello, Emmet and IntelliSense!</h1>',
-          '</body>',
-          '</html>'
-        ].join('\n'),
+        value:  `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<${""}/body>
+<${""}/html>`,
         language: 'html',
-        theme: 'vs-dark'
+        theme: 'main'
       });
 
       // Enable Emmet for HTML in Monaco Editor
@@ -48,42 +51,31 @@
         target: monaco.languages.typescript.ScriptTarget.ES2016,
         allowNonTsExtensions: true
       });
-      monaco.languages.typescript.javascriptDefaults.addExtraLib([
-        'declare const document: Document;',
-        'interface Document {',
-        '  querySelector(selectors: string): HTMLElement | null;',
-        '}',
-        'interface HTMLElement {',
-        '  style: CSSStyleDeclaration;',
-        '}',
-        'interface CSSStyleDeclaration {',
-        '  background: string;',
-        '  padding: string;',
-        '  // Add other CSS properties here as needed',
-        '}',
-      ].join('\n'), 'domLib.d.ts');
 
       // Exclude Emmet suggestions within specific tags
-      editor.onDidCreateEditor(function() {
-        editor.getModel().updateOptions({ 
-          wordBasedSuggestions: false,
-          suggest: {
-            filterGraceful: false,
-            snippetsPreventQuickSuggestions: false
-          }
-        });
-      });
-
       // Update preview on content change
       editor.onDidChangeModelContent(() => {
-        updatePreview();
+        //     updatePreview();
       });
 
-      function updatePreview() {
-        // Code to update preview if needed
-        console.log('Preview updated:', editor.getValue());
-      }
     });
   </script>
+  <style>
+ 
+    #editor {
+      height: 100%;
+      width: 100%;
+      overflow-y: hidden;
+    }
+
+    body,
+    html {
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+    }
+  </style>
 </body>
+
 </html>
