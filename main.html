@@ -14,32 +14,7 @@
   <div id="editor"></div>
 
   <script>
-    //import './theme.js';
-function newEditor(elem,lang,value = "", theme = "main") {
 
-  require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
-
-
-    require(['vs/editor/editor.main'], function () {
-
-      initTheme(monaco);
-      
-      MonacoEditorEx.useMonacoEx(monaco);
-      var editor = monaco.editor.create(elem, {
-        value:  value,
-        language: lang,
-        theme: theme
-      });
-
-      emmetMonaco.emmetHTML(monaco);
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.ES2016,
-        allowNonTsExtensions: true
-      });
-      editor.onDidChangeModelContent(() => {
-      });
-    });
-}
 newEditor(editor,"css", "body {}");
   </script>
   <style>
