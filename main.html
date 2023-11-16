@@ -15,8 +15,9 @@
 
   <script>
     //import './theme.js';
+function newEditor(elem,lang,value = "", theme = "main") {
 
-      require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
+  require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor/min/vs' } });
 
 
     require(['vs/editor/editor.main'], function () {
@@ -24,37 +25,22 @@
       initTheme(monaco);
       
       MonacoEditorEx.useMonacoEx(monaco);
-      var editor = monaco.editor.create(document.getElementById('editor'), {
-        value:  `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<${""}/body>
-<${""}/html>`,
-        language: 'html',
-        theme: 'main'
+      var editor = monaco.editor.create(elem, {
+        value:  value,
+        language: lang,
+        theme: theme
       });
 
-      // Enable Emmet for HTML in Monaco Editor
       emmetMonaco.emmetHTML(monaco);
-
-      // Register IntelliSense features for JavaScript and CSS within script and style tags
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2016,
         allowNonTsExtensions: true
       });
-
-      // Exclude Emmet suggestions within specific tags
-      // Update preview on content change
       editor.onDidChangeModelContent(() => {
-        //     updatePreview();
       });
-
     });
+}
+newEditor(editor,"css", "body {}");
   </script>
   <style>
  
